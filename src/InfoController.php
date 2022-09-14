@@ -7,6 +7,9 @@ namespace App;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use OpenApi\Annotations as OA;
+use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
+use Yiisoft\Translator\TranslatorInterface;
 
 /**
  * @OA\Info(title="Yii API application", version="1.0")
@@ -45,8 +48,17 @@ class InfoController
      *    ),
      * )
      */
-    public function index(DataResponseFactoryInterface $responseFactory): ResponseInterface
+    public function index(
+        TranslatorInterface $translator, 
+        ServerRequestInterface $request, 
+        DataResponseFactoryInterface $responseFactory
+    ): ResponseInterface
     {
-        return $responseFactory->createResponse(['version' => '3.0', 'author' => 'yiisoft']);
+        $params = $request->getQueryParams();
+        $locale = $translator->getLocale();
+        if ($locale !== $params['locale']) {
+            throw new RuntimeException('Translator locale was changed by other coroutines.');
+        }
+        return $responseFactory->createResponse(['version' => '3.0', 'author' => 'yiisoft', 'locale' => $locale]);
     }
 }

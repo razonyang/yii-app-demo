@@ -7,6 +7,7 @@ use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Injector\Injector;
 use Yiisoft\Middleware\Dispatcher\MiddlewareDispatcher;
+use Yiisoft\Translator\TranslatorInterface;
 
 /** @var array $params */
 
@@ -18,6 +19,12 @@ return [
                     ->withMiddlewares($params['middlewares']);
             }),
             'fallbackHandler' => Reference::to(NotFoundHandler::class),
+        ],
+    ],
+    TranslatorMiddleware::class => [
+        'class' => TranslatorMiddleware::class,
+        '__construct()' => [
+            Reference::to(TranslatorInterface::class),
         ],
     ],
 ];

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Middleware\TranslatorMiddleware;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -19,7 +20,14 @@ return [
     'middlewares' => [
         ErrorCatcher::class,
         SubFolder::class,
+        TranslatorMiddleware::class,
         Router::class,
+    ],
+
+    'razonyang/yii-runner-swoole' => [
+        'pool' => [
+            'workerNumber' => 1,
+        ],
     ],
 
     'yiisoft/aliases' => [
